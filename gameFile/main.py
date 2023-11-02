@@ -1,4 +1,5 @@
-import pygame
+import pygame, pymunk
+
 pygame.init()
 
 # Set up the drawing window
