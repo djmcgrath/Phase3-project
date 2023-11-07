@@ -19,12 +19,6 @@ def game():
     pygame.draw.rect(screen, color, pygame.Rect(1, 540, 800, 800))
     pygame.display.flip()
 
-    #road image setup
-    road = pygame.image.load("images/road.png")
-    scale1 = 2.8
-    road = pygame.transform.scale(road, (road.get_width() * scale1, road.get_height() * scale1))
-  
-
     #monkey image
     x = 650
     y = 590
@@ -35,90 +29,144 @@ def game():
     rect.center = (x, y)
 
     #banana image
+    bananaX = 640
+    bananaY = -3000
     banana_peel = pygame.image.load("images/bpeel.webp")
-    scale2 = .15
     banana_peel = pygame.transform.scale(banana_peel, (banana_peel.get_width() * scale, banana_peel.get_height() * scale))
+    Brect = banana_peel.get_rect(center = (bananaX, bananaY))
+
+    #road image setup
+    scale1 = 2.8
+    road = pygame.image.load("images/road.png")
+    road = pygame.transform.scale(road, (road.get_width() * scale1, road.get_height() * scale1))
 
     #car images 
+    scale2 = .15
+
+    redCarX = -300
+    redCarY = 80 
     redCar = pygame.image.load("images/redCar.png")
     redCar = pygame.transform.scale(redCar, (redCar.get_width() * scale2, redCar.get_height() * scale2))
+    Rrect = redCar.get_rect(center = (redCarX, redCarY))
 
     goldCar = pygame.image.load("images/goldCar.png")
     goldCar = pygame.transform.scale(goldCar, (goldCar.get_width() * scale2, goldCar.get_height() * scale2))
 
+    greenCarX = -300
+    greenCarY = 450
     greenCar = pygame.image.load("images/greenCar.png")
     greenCar = pygame.transform.scale(greenCar, (greenCar.get_width() * scale2, greenCar.get_height() * scale2))
-
-    greyCar = pygame.image.load("images/greyCar.png")
-    greyCar = pygame.transform.scale(greyCar, (greyCar.get_width() * scale2, greyCar.get_height() * scale2))
-
-    #Round # text
-    White = (250, 250, 250)
-    Black = (0, 0, 0)
-    font = pygame.font.Font('freesansbold.ttf', 50)
-    roundNum = font.render("Round 1", True, White, Black)
-    textRect = roundNum.get_rect()
-    textRect.center = (400, 590)
-
-    #X and Y variables for the different color cars and banana positions in the 3 lanes and speed for how fast the car goes
-    greenCarX = -300
-    greenCarY = 380
-
-    redCarX = -300
-    redCarY = 30
+    GnRect = greenCar.get_rect(center = (greenCarX, greenCarY))
 
     greyCarX = -300
-    greyCarY = 200
+    greyCarY = 260
+    greyCar = pygame.image.load("images/greyCar.png")
+    greyCar = pygame.transform.scale(greyCar, (greyCar.get_width() * scale2, greyCar.get_height() * scale2))
+    GyRect = greyCar.get_rect(center = (greyCarX, greyCarY))
 
-    bananaX = 620
-    banana1Y = 50
-    banana2Y = 230
-    banana3Y = 410
+    #Round # text
 
-    speed = 4
+    #X and Y variables for the different color cars and banana positions in the 3 lanes and speed for how fast the car goes
 
-    randomCar = randint(1,3)
+    speed = 3
+
+
+    car_rect_list = []
+
+ 
+    inRound = 3
+    score = 0
+    while inRound > 0:
+
+        banana1Y = 410
+        banana2Y = 220
+        banana3Y = 50
+
+        GnRect.x = -300
+        Rrect.x = -300
+        GyRect.x = -300
+
+        run = True
+
+        White = (250, 250, 250)
+        Black = (0, 0, 0)
+        font = pygame.font.Font('font/Pixeltype.ttf', 80)
+        livesNum = font.render(f"Lives {inRound}", True, White, Black)
+        textRect = livesNum.get_rect()
+        textRect.center = (400, 590)
+
+        scoreNum = font.render(f"Score: {score}", True, White, Black)
+        textRect1 = scoreNum.get_rect()
+        textRect1.center = (150, 590)
+
+
+
+
+
+        randomCar = randint(1,3)
+        while run:
+            collideRed = pygame.Rect.colliderect(Rrect, Brect)
+            collideGreen = pygame.Rect.colliderect(GnRect, Brect)
+            collideGrey = pygame.Rect.colliderect(GyRect, Brect)
+
+            screen.blit(road, (0, -50))
+
+            if randomCar == 1 and GnRect.x <= 800:
+                GnRect.x += speed
+            elif randomCar == 2 and Rrect.x <= 800:
+                Rrect.x += speed
+            elif randomCar == 3 and GyRect.x <= 800:
+                GyRect.x += speed
+            elif GnRect.x > 800 or Rrect.x > 800 or GyRect.x > 800:
+                run = False
+                inRound -= 1  
+
+
+            if collideRed:
+                # Rrect.right = Brect.left
+                run = False
+                score += 1
+                
+            elif collideGreen:
+                run = False
+                score += 1
+            elif collideGrey:
+                run = False
+                score += 1
+                      
+
+            screen.blit(livesNum, textRect)
+            screen.blit(scoreNum, textRect1)
+            screen.blit(img, rect)
+            screen.blit(banana_peel, Brect)
+            screen.blit(redCar, Rrect)
+            screen.blit(greyCar, GyRect)
+            screen.blit(greenCar, GnRect)
+            
+
+            # Did the user click the window close button?
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_1:
+                        Brect.y = banana1Y
+                    elif event.key == pygame.K_2:
+                        Brect.y = banana2Y
+                    elif event.key == pygame.K_3:
+                        Brect.y = banana3Y
+
+            pygame.display.update()
+        speed += 1
+ 
+
+    
 
     # Run until the user asks to quit
-    run = True
-    while run:
-
-        screen.blit(road, (0, -50))
-
-        if randomCar == 1:
-            greenCarX += speed
-        elif randomCar == 2:
-            redCarX += speed
-        else:
-            greyCarX += speed
-        
-        
-        screen.blit(roundNum, textRect)
-        screen.blit(img, rect)
-        screen.blit(redCar, (redCarX, redCarY))
-        screen.blit(greyCar, (greyCarX, greyCarY))
-        screen.blit(greenCar, (greenCarX, greenCarY))
-        
-        
-        
-        
-
-        # Did the user click the window close button?
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_1:
-                    screen.blit(banana_peel, (bananaX, banana1Y))
-                elif event.key == pygame.K_2:
-                    screen.blit(banana_peel, (bananaX, banana2Y))
-                elif event.key == pygame.K_3:
-                    screen.blit(banana_peel, (bananaX, banana3Y))
-
-
-        pygame.display.update()
-
+    
+    
     # Done! Time to quit.
     pygame.quit()
 

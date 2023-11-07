@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 pygame = "*"
+inquirer = "*"
+sqlalchemy = "*"
 
 [dev-packages]
 
