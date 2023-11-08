@@ -46,8 +46,11 @@ def game():
     redCar = pygame.transform.scale(redCar, (redCar.get_width() * scale2, redCar.get_height() * scale2))
     Rrect = redCar.get_rect(center = (redCarX, redCarY))
 
+    goldCarX = -300
+    goldCarY = 80
     goldCar = pygame.image.load("images/goldCar.png")
     goldCar = pygame.transform.scale(goldCar, (goldCar.get_width() * scale2, goldCar.get_height() * scale2))
+    GdRect = goldCar.get_rect(center = (goldCarX, goldCarY))
 
     greenCarX = -300
     greenCarY = 450
@@ -79,6 +82,7 @@ def game():
         GnRect.x = -300
         Rrect.x = -300
         GyRect.x = -300
+        GdRect.x = -300
 
         #The text on the screen base info
         White = (250, 250, 250)
@@ -106,15 +110,28 @@ def game():
 
         #random num generator that helps determine which lane will send a car
         randomCar = randint(1,3)
+        randomGoldCar = randint(1, 3)
         while run:
 
             #collision variables to detect collisions
             collideRed = pygame.Rect.colliderect(Rrect, Brect)
             collideGreen = pygame.Rect.colliderect(GnRect, Brect)
             collideGrey = pygame.Rect.colliderect(GyRect, Brect)
+            collideGold = pygame.Rect.colliderect(GdRect, Brect)
 
             #Displays the road image properly
             screen.blit(road, (0, -50))
+
+            if speed == 12:
+                randomCar = 4
+                if randomGoldCar == 1 and GdRect.x <= 800:
+                    GdRect.x += speed
+                elif randomGoldCar == 2 and GdRect.x <= 800:
+                    GdRect.y = 250
+                    GdRect.x += speed
+                elif randomGoldCar == 3 and GdRect.x <= 800:
+                    GdRect.y = 460
+                    GdRect.x += speed
 
             #the functionality from the random num generator above
             if randomCar == 1 and GnRect.x <= 800:
@@ -126,6 +143,8 @@ def game():
             elif GnRect.x > 800 or Rrect.x > 800 or GyRect.x > 800:
                 run = False
                 inRound -= 1  
+            
+
 
             #if statements that check to see if there was a collision and then increase score and round
             #also reset the banana peel after collision
@@ -141,6 +160,11 @@ def game():
                 run = False
                 Brect.y = -300
                 score += 1
+            elif collideGold:
+                run = False
+                Brect.y = -300
+                score += 10
+            
                       
             #What is responsible for putting the actual images and texts in the window
             screen.blit(livesNum, textRect)
@@ -153,6 +177,7 @@ def game():
             screen.blit(redCar, Rrect)
             screen.blit(greyCar, GyRect)
             screen.blit(greenCar, GnRect)
+            screen.blit(goldCar, GdRect)
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
