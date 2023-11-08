@@ -70,6 +70,7 @@ if __name__ == "__main__":
         elif start_menu_responses_key == "Delete a User":
             delete_user()
         elif start_menu_responses_key == "Quit":
+            print("Thanks for Playing!")
             exit
 
     def return_to_start ():
