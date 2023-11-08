@@ -172,5 +172,5 @@ def game():
     
     # Done! Time to quit.
     pygame.quit()
-
+    return score
 

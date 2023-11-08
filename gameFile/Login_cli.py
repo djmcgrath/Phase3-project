@@ -9,8 +9,8 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer(), primary_key = True)
-    userName = Column("Username", String())
-    swagScale = Column("SwagScale", Integer())
+    userName = Column(String())
+    swagScale = Column(Integer())
 
     def __repr__ (self):
         return f"UserName: {self.userName}"
@@ -68,6 +68,8 @@ if __name__ == "__main__":
             update_users()
         elif start_menu_responses_key == "Delete a User":
             delete_user()
+        elif start_menu_responses_key == "Quit":
+            exit
 
 
     def user_menu():
@@ -102,7 +104,7 @@ if __name__ == "__main__":
             userName = answers['userName'],
             swagScale = answers['SwagScale'],
         )
-        if new_user.name in [user[0] for user in user_name]:
+        if new_user.userName in [user[0] for user in user_name]:
             print("There is already a user with that name")
             create_new_user()
         else:
@@ -154,4 +156,5 @@ if __name__ == "__main__":
         """)
     
     starter_menu()
+
 
