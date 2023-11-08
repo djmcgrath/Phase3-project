@@ -131,7 +131,25 @@ if __name__ == "__main__":
         pass
 
     def delete_user():
-        pass
+        users = session.query(User).all()
+        question = [
+            inquirer.List("delete",
+                          message = "Pick a User to delete.",
+                          choices = [user for user in users]
+                          ),
+            inquirer.List("confirmation",
+                          message = "Are you sure you want to delete this user?",
+                          choices = ["Yes", "No"]
+                          )
+        ]
+        answer = inquirer.prompt(question)
+
+        if answer["confirmation"] == "No":
+            print(f"You have saved {answer['delete'].userName} from deletion!")
+        if answer["confirmation"] == "Yes":
+            session.delete(answer["delete"])
+            session.commit()
+        starter_menu()
 
     def returning_user():
         pass

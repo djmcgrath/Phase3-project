@@ -70,9 +70,6 @@ def game():
 
     speed = 3
 
-
-    car_rect_list = []
-
  
     inRound = 3
     score = 0
