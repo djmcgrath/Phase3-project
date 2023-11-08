@@ -11,9 +11,6 @@ def game():
     screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption("Monkey")
 
-    # def send_car ()
-
-
     #"grass" patch
     color = (0,250,0)
     pygame.draw.rect(screen, color, pygame.Rect(1, 540, 800, 800))
@@ -64,27 +61,26 @@ def game():
     greyCar = pygame.transform.scale(greyCar, (greyCar.get_width() * scale2, greyCar.get_height() * scale2))
     GyRect = greyCar.get_rect(center = (greyCarX, greyCarY))
 
-    #Round # text
-
-    #X and Y variables for the different color cars and banana positions in the 3 lanes and speed for how fast the car goes
-
+    #Base variables for lives, speed, and score
     speed = 3
-
- 
     inRound = 3
     score = 0
     while inRound > 0:
 
+        #for the second while loop
+        run = True
+
+        #Banana peel y values that correspond with each of the 3 lanes
         banana1Y = 410
         banana2Y = 220
         banana3Y = 50
 
+        #Resets the x values for the cars 
         GnRect.x = -300
         Rrect.x = -300
         GyRect.x = -300
 
-        run = True
-
+        #The text on the screen base info
         White = (250, 250, 250)
         Black = (0, 0, 0)
         font = pygame.font.Font('font/Pixeltype.ttf', 80)
@@ -92,7 +88,6 @@ def game():
         textRect = livesNum.get_rect()
         textRect.center = (400, 590)
 
-        
         scoreNum = font.render(f"Score: {score}", True, White, Black)
         textRect1 = scoreNum.get_rect()
         textRect1.center = (150, 590)
@@ -109,15 +104,19 @@ def game():
 
 
 
-
+        #random num generator that helps determine which lane will send a car
         randomCar = randint(1,3)
         while run:
+
+            #collision variables to detect collisions
             collideRed = pygame.Rect.colliderect(Rrect, Brect)
             collideGreen = pygame.Rect.colliderect(GnRect, Brect)
             collideGrey = pygame.Rect.colliderect(GyRect, Brect)
 
+            #Displays the road image properly
             screen.blit(road, (0, -50))
 
+            #the functionality from the random num generator above
             if randomCar == 1 and GnRect.x <= 800:
                 GnRect.x += speed
             elif randomCar == 2 and Rrect.x <= 800:
@@ -128,13 +127,12 @@ def game():
                 run = False
                 inRound -= 1  
 
-
+            #if statements that check to see if there was a collision and then increase score and round
+            #also reset the banana peel after collision
             if collideRed:
-                # Rrect.right = Brect.left
                 run = False
                 Brect.y = -300
                 score += 1
-                
             elif collideGreen:
                 run = False
                 Brect.y = -300
@@ -144,7 +142,7 @@ def game():
                 Brect.y = -300
                 score += 1
                       
-
+            #What is responsible for putting the actual images and texts in the window
             screen.blit(livesNum, textRect)
             screen.blit(scoreNum, textRect1)
             screen.blit(firstNum, textRect2)
@@ -156,13 +154,11 @@ def game():
             screen.blit(greyCar, GyRect)
             screen.blit(greenCar, GnRect)
             
-
-            # Did the user click the window close button?
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
 
-                
+                #if statements that put the banana peel in the lane when 1, 2, or 3 are clicked
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_1:
                         Brect.y = banana1Y
@@ -172,15 +168,12 @@ def game():
                         Brect.y = banana3Y
 
             pygame.display.update()
+        #increases the speed by .5 after each round
         speed += .5
  
-
-    
-
-    # Run until the user asks to quit
-    
-    
     # Done! Time to quit.
     pygame.quit()
+
+    #returns the score after the game is over so it can be put into the table 
     return score
 
