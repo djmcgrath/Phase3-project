@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session, relationship, backref, declarative_base
 
 Base = declarative_base()
 
+#Class for user that makes a table for users that have usernames and swagscales also ids
 class User(Base):
     __tablename__ = "users"
 
@@ -16,6 +17,7 @@ class User(Base):
     def __repr__ (self):
         return f"UserName: {self.userName}"
     
+#Class for score that makes a table for score that has users and scores also ids
 class Score(Base):
     __tablename__ = "score"
 
@@ -27,10 +29,12 @@ class Score(Base):
         return f"Score: {self.score}"
     
 if __name__ == "__main__":
+    #creates and assigns the engine to session
     engine = create_engine("sqlite:///database.db")
     Base.metadata.create_all(engine)
     session = Session(engine)
 
+    #Function that is displayed when you run the file and shows you the options to play, update, view and delete
     def starter_menu():
         print("""
         ▐▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▌
@@ -73,6 +77,7 @@ if __name__ == "__main__":
             print("Thanks for Playing!")
             exit
 
+    #Simple function that asks whether or not you want to return to the start menu
     def return_to_start ():
         return_start = [
             inquirer.List("return",
@@ -87,6 +92,7 @@ if __name__ == "__main__":
             print("Thanks for Playing! Good-bye!")
             exit
 
+    #User function that asks if you want to continue as a new or exsisting user after clicking Play in the start menu
     def user_menu():
         users = session.query(User).all()
         user_menu_options = [
@@ -108,6 +114,7 @@ if __name__ == "__main__":
             else:
                 returning_user()
 
+    #Function that allows the user to input their information a after they click "new" from the previous function
     def create_new_user():
         user_name = session.query(User.userName).all()
         question = [
@@ -136,6 +143,7 @@ if __name__ == "__main__":
             session.commit()
             return_to_start()
 
+    #Function that sorts and returns the top three high scores
     def high_score():
         users = session.query(User).all()
         all_scores = session.query(Score).all()
@@ -172,6 +180,7 @@ if __name__ == "__main__":
             """)
         return_to_start()
 
+    #Function that allows you to see all the users and then select the one you want to see all of their information
     def view_users():
         users = session.query(User).all()
         all_scores = session.query(Score).all()
@@ -196,6 +205,7 @@ if __name__ == "__main__":
             """)
             return_to_start()
 
+    #Function that allows you to change the username and amount of swag a user has
     def update_users():
         users = session.query(User).all()
         users_names = session.query(User.userName).all()
@@ -242,7 +252,7 @@ if __name__ == "__main__":
                 session.commit()
         return_to_start()
 
-
+    #Function that deletes the user and their accompanying scores
     def delete_user():
         users = session.query(User).all()
         question = [
@@ -265,6 +275,8 @@ if __name__ == "__main__":
             session.commit()
         return_to_start()
 
+    #Function that allows you to pick an exsisting user and use their id to play another game 
+    #and add that new score to the table under their id
     def returning_user():
         users = session.query(User).all()
         question = [
@@ -285,6 +297,7 @@ if __name__ == "__main__":
         game_over_banner()
         return_to_start()
 
+    #Function that displays the game over banner when called
     def game_over_banner():
         print("""
         ▐▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▌

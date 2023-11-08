@@ -110,6 +110,7 @@ def game():
 
         #random num generator that helps determine which lane will send a car
         randomCar = randint(1,3)
+        #random num generator that helps determine which lane the gold car will go down
         randomGoldCar = randint(1, 3)
         while run:
 
@@ -122,6 +123,7 @@ def game():
             #Displays the road image properly
             screen.blit(road, (0, -50))
 
+            #Once the speed hits 12 it will send a gold car down a lane and it is worth 10 points
             if speed == 12:
                 randomCar = 4
                 if randomGoldCar == 1 and GdRect.x <= 800:
