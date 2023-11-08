@@ -174,4 +174,3 @@ def game():
     pygame.quit()
 
 
-game()
