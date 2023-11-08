@@ -92,18 +92,20 @@ def game():
         textRect = livesNum.get_rect()
         textRect.center = (400, 590)
 
+        
         scoreNum = font.render(f"Score: {score}", True, White, Black)
         textRect1 = scoreNum.get_rect()
         textRect1.center = (150, 590)
 
-        firstNum = font.render("1", True, White, Black)
-        textRect2 = firstNum.get_rect(center = (640, 50))
+        font1 = pygame.font.Font(None, 80)
+        firstNum = font1.render("1", True, White, Black)
+        textRect2 = firstNum.get_rect(center = (640, 410))
 
-        firstNum = font.render("1", True, White, Black)
-        textRect2 = firstNum.get_rect(center = (640, 50))
+        secondNum = font1.render("2", True, White, Black)
+        textRect3 = secondNum.get_rect(center = (640, 220))
 
-        firstNum = font.render("1", True, White, Black)
-        textRect2 = firstNum.get_rect(center = (640, 50))
+        thirdNum = font1.render("3", True, White, Black)
+        textRect4 = thirdNum.get_rect(center = (640, 50))
 
 
 
@@ -145,6 +147,9 @@ def game():
 
             screen.blit(livesNum, textRect)
             screen.blit(scoreNum, textRect1)
+            screen.blit(firstNum, textRect2)
+            screen.blit(secondNum, textRect3)
+            screen.blit(thirdNum, textRect4)
             screen.blit(img, rect)
             screen.blit(banana_peel, Brect)
             screen.blit(redCar, Rrect)
