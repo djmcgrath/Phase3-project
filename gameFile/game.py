@@ -125,13 +125,16 @@ def game():
             if collideRed:
                 # Rrect.right = Brect.left
                 run = False
+                Brect.y = -300
                 score += 1
                 
             elif collideGreen:
                 run = False
+                Brect.y = -300
                 score += 1
             elif collideGrey:
                 run = False
+                Brect.y = -300
                 score += 1
                       
 
@@ -159,7 +162,7 @@ def game():
                         Brect.y = banana3Y
 
             pygame.display.update()
-        speed += 1
+        speed += .5
  
 
     
