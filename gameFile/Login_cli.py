@@ -190,12 +190,57 @@ if __name__ == "__main__":
             print(f"""
             {answer['update']}
             User Swag: {swag}
+            Numer of Times Played: {len(times_played)}
             Highest Score: {max(times_played)}
             """)
             return_to_start()
 
     def update_users():
-        pass
+        users = session.query(User).all()
+        users_names = session.query(User.userName).all()
+        question = [
+            inquirer.List("update",
+                          message = "Select a User to Update",
+                          choices = [user for user in users]
+                          ),
+            inquirer.List("criteria",
+                          message = "What do you want to Update?",
+                          choices = ["Username", "Swag", "Nevermind"]
+                          ),
+        ]
+        answer = inquirer.prompt(question)
+        answer_update = answer["update"]
+        answer_criteria = answer["criteria"]
+
+        if answer_criteria == "Username":
+            questions = [
+                inquirer.Text("username",
+                              message = f"Original Name: {answer_update.userName}  New Name"
+                              ),
+            ]
+            answers_username = inquirer.prompt(questions)
+
+            if answers_username["username"] == answer_update.userName:
+                print("New Name has to be different from the Original name")
+            elif answers_username["username"] in [user[0] for user in users_names]:
+                print("The name you have entered already exists")
+            else:
+                answer_update.userName = answers_username["username"]
+                session.commit()
+        elif answer_criteria == "Swag":
+            question1 = [
+                inquirer.Text("swag",
+                              message = f"Old Swag Rating: {answer_update.swagScale}  New Swag Rating",
+                              ),
+            ]
+            answers_swag = inquirer.prompt(question1)
+            if answers_swag["swag"] == answer_update.swagScale:
+                print("Swag must be a new value")
+            else:
+                answer_update.swagScale = answers_swag["swag"]
+                session.commit()
+        return_to_start()
+
 
     def delete_user():
         users = session.query(User).all()
@@ -220,7 +265,24 @@ if __name__ == "__main__":
         return_to_start()
 
     def returning_user():
-        pass
+        users = session.query(User).all()
+        question = [
+            inquirer.List("update",
+                          message = "Select an Exsisting User",
+                          choices = [user for user in users],
+                          ),
+        ]
+        answer = inquirer.prompt(question)
+        answer_key = answer["update"]
+        final_score = game()
+        new_score = Score(
+            user = answer_key.id,
+            score = final_score
+        )
+        session.add(new_score)
+        session.commit()
+        game_over_banner()
+        return_to_start()
 
     def game_over_banner():
         print("""
