@@ -96,6 +96,14 @@ def game():
         textRect1 = scoreNum.get_rect()
         textRect1.center = (150, 590)
 
+        firstNum = font.render("1", True, White, Black)
+        textRect2 = firstNum.get_rect(center = (640, 50))
+
+        firstNum = font.render("1", True, White, Black)
+        textRect2 = firstNum.get_rect(center = (640, 50))
+
+        firstNum = font.render("1", True, White, Black)
+        textRect2 = firstNum.get_rect(center = (640, 50))
 
 
 

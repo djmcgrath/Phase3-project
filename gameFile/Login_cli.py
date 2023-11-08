@@ -11,6 +11,7 @@ class User(Base):
     id = Column(Integer(), primary_key = True)
     userName = Column(String())
     swagScale = Column(Integer())
+    scores = relationship("Score", backref = backref("users"), cascade = "all, delete-orphan")
 
     def __repr__ (self):
         return f"UserName: {self.userName}"
@@ -71,6 +72,19 @@ if __name__ == "__main__":
         elif start_menu_responses_key == "Quit":
             exit
 
+    def return_to_start ():
+        return_start = [
+            inquirer.List("return",
+                          message = "Would you like to return to the Start menu?",
+                          choices = ["Yes", "No"],
+                          ),
+        ]
+        return_start_answers = inquirer.prompt(return_start)
+        if return_start_answers["return"] == "Yes":
+            starter_menu()
+        elif return_start_answers["return"] == "No":
+            print("Thanks for Playing! Good-bye!")
+            exit
 
     def user_menu():
         users = session.query(User).all()
@@ -119,13 +133,66 @@ if __name__ == "__main__":
             game_over_banner()
             session.add(new_score)
             session.commit()
-            starter_menu()
+            return_to_start()
 
     def high_score():
-        pass
+        users = session.query(User).all()
+        all_scores = session.query(Score).all()
+        all_scores1 = [(score.score, score.users.userName) for score in all_scores]
+        sorted_list = sorted(all_scores1, key = lambda k: k[0], reverse = True)
+        if not users:
+            print("There are no exsisting users")
+        else:
+            print(f"""
+            ▐▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▌
+            ▐ /$$   /$$ /$$           /$$                      ▌
+            ▐| $$  | $$|__/          | $$                      ▌
+            ▐| $$  | $$ /$$  /$$$$$$ | $$$$$$$                 ▌
+            ▐| $$$$$$$$| $$ /$$__  $$| $$__  $$                ▌
+            ▐| $$__  $$| $$| $$  \ $$| $$  \ $$                ▌
+            ▐| $$  | $$| $$| $$  | $$| $$  | $$                ▌
+            ▐| $$  | $$| $$|  $$$$$$$| $$  | $$                ▌
+            ▐|__/  |__/|__/ \____  $$|__/  |__/                ▌
+            ▐               /$$  \ $$                          ▌
+            ▐              |  $$$$$$/                          ▌
+            ▐               \______/                           ▌
+            ▐  /$$$$$$                                         ▌
+            ▐ /$$__  $$                                        ▌
+            ▐| $$  \__/  /$$$$$$$  /$$$$$$   /$$$$$$   /$$$$$$ ▌
+            ▐|  $$$$$$  /$$_____/ /$$__  $$ /$$__  $$ /$$__  $$▌
+            ▐ \____  $$| $$      | $$  \ $$| $$  \__/| $$$$$$$$▌
+            ▐ /$$  \ $$| $$      | $$  | $$| $$      | $$_____/▌
+            ▐|  $$$$$$/|  $$$$$$$|  $$$$$$/| $$      |  $$$$$$$▌
+            ▐ \______/  \_______/ \______/ |__/       \_______/▌
+            ▐▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▌
+            Highest Score: {sorted_list[0][0]}  User: {sorted_list[0][1]}
+            Second Highest: {sorted_list[1][0]}  User: {sorted_list[1][1]}
+            Third Highest: {sorted_list[2][0]}  User: {sorted_list[2][1]}
+            """)
+        return_to_start()
 
     def view_users():
-        pass
+        users = session.query(User).all()
+        all_scores = session.query(Score).all()
+        if not users:
+            print("No Exsiting Users")
+            starter_menu()
+        else:
+            question = [
+                inquirer.List("update",
+                              message = "Select a User to View",
+                              choices = [user for user in users],
+                              ),
+            ]
+            answer = inquirer.prompt(question)
+            times_played = [score.score for score in all_scores if answer["update"].id == score.user]
+            swag = answer["update"].swagScale
+            print(f"""
+            {answer['update']}
+            User Swag: {swag}
+            Highest Score: {max(times_played)}
+            """)
+            return_to_start()
 
     def update_users():
         pass
@@ -147,9 +214,10 @@ if __name__ == "__main__":
         if answer["confirmation"] == "No":
             print(f"You have saved {answer['delete'].userName} from deletion!")
         if answer["confirmation"] == "Yes":
-            session.delete(answer["delete"])
+            print("User has been deleted")
+            session.delete(answer['delete'])
             session.commit()
-        starter_menu()
+        return_to_start()
 
     def returning_user():
         pass
