@@ -1,5 +1,4 @@
-# Phase3-project
-# Monkey Game
+# Phase3-project: Monkey Game
 
 # Installation:
     1. git clone the ssh into your terminal
